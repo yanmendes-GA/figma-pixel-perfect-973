@@ -48,7 +48,7 @@ All colors MUST be HSL.
     --sidebar-ring: 28 78% 48%;
 
     --success: 142 76% 36%;
-    --warning: 60 90% 68%;
+    --warning: 230 90% 68%;
     --info: 204 100% 50%;
   }
 
@@ -97,6 +97,6 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
   }
 }

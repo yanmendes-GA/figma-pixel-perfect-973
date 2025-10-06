@@ -1,8 +1,8 @@
 import React from 'react';
+import { DataTable, Column } from './DataTable';
 import { Avatar } from './Avatar';
 import { StatusChip } from './StatusChip';
 import { StarRating } from './StarRating';
-import { ActionMenu } from './ActionMenu';
 
 interface MentorshipSession {
   id: string;
@@ -21,20 +21,73 @@ interface MentorTableProps {
 }
 
 export const MentorTable: React.FC<MentorTableProps> = ({ sessions }) => {
-  const getActionItems = (sessionId: string, status: string) => [
+  const columns: Column<MentorshipSession>[] = [
+    {
+      key: 'title',
+      label: 'Título',
+      sortable: true,
+      width: 'flex-1 min-w-[200px]'
+    },
+    {
+      key: 'status',
+      label: 'Status',
+      sortable: false,
+      width: 'w-[200px]',
+      align: 'center',
+      hidden: 'hidden lg:flex',
+      render: (session) => (
+        <StatusChip status={session.status} text={session.statusText} />
+      )
+    },
+    {
+      key: 'mentorName',
+      label: 'Empresa',
+      sortable: true,
+      width: 'w-[250px]',
+      hidden: 'hidden xl:flex',
+      render: (session) => (
+        <div className="flex items-center gap-2.5">
+          <Avatar initials={session.mentorInitials} />
+          <span className="truncate">{session.mentorName}</span>
+        </div>
+      )
+    },
+    {
+      key: 'date',
+      label: 'Data da mentoria',
+      sortable: true,
+      width: 'w-[150px]',
+      align: 'center',
+      hidden: 'hidden lg:flex',
+      render: (session) => (
+        <time dateTime={session.date}>{session.date}</time>
+      )
+    },
+    {
+      key: 'hasRating',
+      label: 'Avaliação',
+      sortable: false,
+      width: 'w-[180px]',
+      align: 'center',
+      hidden: 'hidden xl:flex',
+      render: (session) => <StarRating showEmpty={!session.hasRating} />
+    }
+  ];
+
+  const getRowActions = (session: MentorshipSession) => [
     {
       label: 'Ver detalhes',
-      onClick: () => console.log('View details:', sessionId),
+      onClick: () => console.log('View details:', session.id),
     },
     {
       label: 'Editar',
-      onClick: () => console.log('Edit:', sessionId),
+      onClick: () => console.log('Edit:', session.id),
     },
-    ...(status !== 'cancelled'
+    ...(session.status !== 'cancelled'
       ? [
           {
             label: 'Cancelar',
-            onClick: () => console.log('Cancel:', sessionId),
+            onClick: () => console.log('Cancel:', session.id),
             variant: 'destructive' as const,
           },
         ]
@@ -42,66 +95,13 @@ export const MentorTable: React.FC<MentorTableProps> = ({ sessions }) => {
   ];
 
   return (
-    <div className="shadow-lg bg-card w-full pt-[30px] pb-8 px-4 lg:px-[30px] rounded-[20px] overflow-x-auto">
-      <div className="min-w-[900px]">
-        <div className="flex w-full items-center text-[15px] text-muted-foreground font-semibold leading-[1.2] pb-4 border-b border-border">
-          <div className="flex-1 min-w-[200px]" role="columnheader">
-            Título
-          </div>
-          <div className="text-center w-[200px] hidden lg:block" role="columnheader">
-            Status
-          </div>
-          <div className="w-[250px] hidden xl:block" role="columnheader">
-            Empresa
-          </div>
-          <div className="w-[150px] hidden lg:block" role="columnheader">
-            Data da mentoria
-          </div>
-          <div className="text-center w-[180px] hidden xl:block" role="columnheader">
-            Avaliação
-          </div>
-          <div className="w-[50px]" role="columnheader"></div>
-        </div>
-      </div>
-      
-      <div className="min-w-[900px]" role="table">
-        {sessions.map((session) => (
-          <div
-            key={session.id}
-            className="flex items-center w-full py-5 border-b border-border hover:bg-muted/20 transition-colors group"
-            role="row"
-          >
-            <div className="flex-1 min-w-[200px] text-foreground text-[15px] font-normal leading-[1.2] pr-4" role="cell">
-              {session.title}
-            </div>
-            
-            <div className="w-[200px] hidden lg:flex justify-center" role="cell">
-              <StatusChip status={session.status} text={session.statusText} />
-            </div>
-            
-            <div className="w-[250px] hidden xl:flex items-center gap-2.5 leading-[1.2]" role="cell">
-              <Avatar initials={session.mentorInitials} />
-              <span className="text-foreground text-[15px] font-normal truncate">
-                {session.mentorName}
-              </span>
-            </div>
-            
-            <div className="w-[150px] hidden lg:flex items-center justify-center text-[15px] text-foreground font-normal whitespace-nowrap" role="cell">
-              <time dateTime={session.date}>
-                {session.date}
-              </time>
-            </div>
-            
-            <div className="w-[180px] hidden xl:flex flex-col items-center justify-center" role="cell">
-              <StarRating showEmpty={!session.hasRating} />
-            </div>
-            
-            <div className="w-[50px] flex items-center justify-center" role="cell">
-              <ActionMenu items={getActionItems(session.id, session.status)} />
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
+    <DataTable
+      data={sessions}
+      columns={columns}
+      selectable={true}
+      getRowId={(session) => session.id}
+      getRowActions={getRowActions}
+      minHeight="min-h-[600px]"
+    />
   );
 };

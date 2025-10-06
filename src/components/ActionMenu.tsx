@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { MoreVertical } from 'lucide-react';
 
-interface ActionMenuItem {
+export interface ActionMenuItem {
   label: string;
-  icon?: string;
+  icon?: React.ReactNode | string;
   onClick: () => void;
   variant?: 'default' | 'destructive';
 }
@@ -64,7 +64,11 @@ export const ActionMenu: React.FC<ActionMenuProps> = ({ items, align = 'right' }
               }`}
             >
               {item.icon && (
-                <img src={item.icon} className="w-4 h-4" alt="" />
+                typeof item.icon === 'string' ? (
+                  <img src={item.icon} className="w-4 h-4" alt="" />
+                ) : (
+                  <span className="w-4 h-4 flex items-center justify-center">{item.icon}</span>
+                )
               )}
               <span>{item.label}</span>
             </button>

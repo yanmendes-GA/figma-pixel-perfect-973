@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { Menu, X } from 'lucide-react';
+import React from 'react';
+import { X } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -7,31 +8,34 @@ interface SidebarProps {
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const menuItems = [
     {
       icon: "https://api.builder.io/api/v1/image/assets/TEMP/16608b5283d1c28f06df6399933cd036703aba0a?placeholderIfAbsent=true",
       label: "Dashboard",
-      active: false
+      path: "/"
     },
     {
       icon: "https://api.builder.io/api/v1/image/assets/TEMP/c2b970a1c3236163d3cbf7cea8fb3c7b1a0ac8f5?placeholderIfAbsent=true",
       label: "Mentorias",
-      active: true
+      path: "/mentorias"
     },
     {
       icon: "https://api.builder.io/api/v1/image/assets/TEMP/d5552ce5144f8ec02b46263b0ed319e28bf78775?placeholderIfAbsent=true",
       label: "Empresas",
-      active: false
+      path: "/empresas"
     },
     {
       icon: "https://api.builder.io/api/v1/image/assets/TEMP/5a9a186f9787ab76ce65871f24deb81c7ba7d116?placeholderIfAbsent=true",
       label: "Relatórios",
-      active: false
+      path: "/relatorios"
     },
     {
       icon: "https://api.builder.io/api/v1/image/assets/TEMP/f151c0770b6dfd827ffa984c8ec09e127e823e62?placeholderIfAbsent=true",
       label: "Configurações",
-      active: false
+      path: "/configuracoes"
     }
   ];
 
@@ -72,25 +76,31 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
             </div>
             
             <div className="w-full text-[15px] font-semibold whitespace-nowrap leading-[1.2] mt-[60px]">
-              {menuItems.map((item, index) => (
-                <button
-                  key={index}
-                  className={`flex w-full items-center gap-4 px-5 py-2.5 rounded-xl transition-all duration-200 ${
-                    item.active
-                      ? 'bg-card text-primary border border-primary shadow-sm'
-                      : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
-                  } ${index > 0 ? 'mt-5' : ''}`}
-                >
-                  <img
-                    src={item.icon}
-                    className="aspect-[1.13] object-contain w-[26px] shrink-0 transition-transform duration-200 hover:scale-110"
-                    alt={item.label}
-                  />
-                  <span className="flex-1 text-left">
-                    {item.label}
-                  </span>
-                </button>
-              ))}
+              {menuItems.map((item, index) => {
+                const isActive = location.pathname === item.path || 
+                  (item.path !== '/' && location.pathname.startsWith(item.path));
+                
+                return (
+                  <button
+                    key={index}
+                    onClick={() => navigate(item.path)}
+                    className={`flex w-full items-center gap-4 px-5 py-2.5 rounded-xl transition-all duration-200 ${
+                      isActive
+                        ? 'bg-card text-primary border border-primary shadow-sm'
+                        : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
+                    } ${index > 0 ? 'mt-5' : ''}`}
+                  >
+                    <img
+                      src={item.icon}
+                      className="aspect-[1.13] object-contain w-[26px] shrink-0 transition-transform duration-200 hover:scale-110"
+                      alt={item.label}
+                    />
+                    <span className="flex-1 text-left">
+                      {item.label}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
           </div>
           

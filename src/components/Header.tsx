@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Menu, Search, Bell, Settings } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 interface HeaderProps {
   onMenuToggle: () => void;
@@ -7,6 +8,7 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ onMenuToggle }) => {
   const [searchQuery, setSearchQuery] = useState('');
+  const navigate = useNavigate();
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -14,7 +16,7 @@ export const Header: React.FC<HeaderProps> = ({ onMenuToggle }) => {
   };
 
   const handleNewMentorship = () => {
-    console.log('Creating new mentorship');
+    navigate('/mentorias/nova');
   };
 
   return (
