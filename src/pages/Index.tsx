@@ -7,6 +7,7 @@ import { Pagination } from '@/components/Pagination';
 const Index = () => {
   const [currentPage, setCurrentPage] = useState(3);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const totalRecords = 754;
 
   const mentorshipSessions = [
@@ -68,21 +69,21 @@ const Index = () => {
   };
 
   return (
-    <div className="overflow-hidden bg-[#101820]">
-      <div className="flex flex-col relative min-h-[1080px] w-full">
+    <div className="min-h-screen bg-background">
+      <div className="flex flex-col lg:flex-row relative min-h-screen w-full">
         <img
           src="https://api.builder.io/api/v1/image/assets/TEMP/1efeabe87bf4e2c63484bb630cfbbaa5e04d63fd?placeholderIfAbsent=true"
-          className="absolute h-full w-full object-cover inset-0"
+          className="absolute h-full w-full object-cover inset-0 opacity-50"
           alt="Background"
         />
         
-        <div className="relative flex items-stretch gap-10 flex-wrap">
-          <Sidebar />
-          
-          <main className="min-w-60 flex-1 shrink basis-[54px] py-5">
-            <Header />
+        <Sidebar isOpen={isSidebarOpen} onToggle={() => setIsSidebarOpen(!isSidebarOpen)} />
+        
+        <div className="relative flex-1 flex flex-col min-h-screen">
+          <main className="flex-1 px-4 lg:px-8 py-5 max-w-[2000px] mx-auto w-full">
+            <Header onMenuToggle={() => setIsSidebarOpen(!isSidebarOpen)} />
             
-            <div className="w-full mt-10">
+            <div className="w-full mt-6 lg:mt-10">
               <MentorTable sessions={mentorshipSessions} />
               
               <Pagination
@@ -92,17 +93,17 @@ const Index = () => {
                 onPageChange={handlePageChange}
                 onItemsPerPageChange={handleItemsPerPageChange}
               />
-              
-              <footer className="flex w-full items-center gap-[40px_100px] text-[15px] text-[#3F464C] font-semibold leading-[1.2] justify-between flex-wrap mt-4">
-                <div className="self-stretch my-auto">
-                  Grupo Acelerador 2025
-                </div>
-                <div className="self-stretch my-auto">
-                  V 1.0.2
-                </div>
-              </footer>
             </div>
           </main>
+          
+          <footer className="relative flex w-full items-center gap-4 lg:gap-[40px] text-sm lg:text-[15px] text-muted-foreground font-semibold justify-between flex-wrap px-4 lg:px-8 py-4 border-t border-border">
+            <div>
+              Grupo Acelerador 2025
+            </div>
+            <div>
+              V 1.0.2
+            </div>
+          </footer>
         </div>
       </div>
     </div>

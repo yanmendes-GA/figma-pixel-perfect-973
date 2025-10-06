@@ -9,47 +9,21 @@ export const StatusChip: React.FC<StatusChipProps> = ({ status, text }) => {
   const getStatusStyles = () => {
     switch (status) {
       case 'not-started':
-        return {
-          textColor: 'text-white',
-          bgColor: 'bg-[#3F464C]',
-          borderColor: 'border-[#A0A3A6]'
-        };
+        return 'text-muted-foreground bg-muted/50 border-muted-foreground/30';
       case 'cancelled':
-        return {
-          textColor: 'text-[#DE4949]',
-          bgColor: 'bg-[rgba(222,73,73,0.20)]',
-          borderColor: 'border-[#DE4949]'
-        };
+        return 'text-destructive bg-destructive/20 border-destructive';
       case 'completed':
-        return {
-          textColor: 'text-[#1CD644]',
-          bgColor: 'bg-[rgba(28,214,68,0.20)]',
-          borderColor: 'border-[#1CD644]'
-        };
+        return 'text-[hsl(142,76%,36%)] bg-[hsl(142,76%,36%)]/20 border-[hsl(142,76%,36%)]';
       case 'not-evaluated':
-        return {
-          textColor: 'text-[#E6E676]',
-          bgColor: 'bg-[rgba(230,230,118,0.20)]',
-          borderColor: 'border-[#E6E676]'
-        };
+        return 'text-[hsl(60,90%,68%)] bg-[hsl(60,90%,68%)]/20 border-[hsl(60,90%,68%)]';
       default:
-        return {
-          textColor: 'text-white',
-          bgColor: 'bg-[#3F464C]',
-          borderColor: 'border-[#A0A3A6]'
-        };
+        return 'text-muted-foreground bg-muted/50 border-muted-foreground/30';
     }
   };
 
-  const styles = getStatusStyles();
-
   return (
-    <div className="flex min-h-[38px] flex-col items-stretch text-xs font-normal uppercase leading-[1.2] justify-center w-[186px] px-[25px]">
-      <div className={`justify-center items-center border flex w-full gap-2.5 px-5 py-2.5 rounded-[0_15px] border-solid ${styles.textColor} ${styles.bgColor} ${styles.borderColor}`}>
-        <div className="self-stretch my-auto">
-          {text}
-        </div>
-      </div>
+    <div className={`inline-flex items-center justify-center px-5 py-2 rounded-[15px] border text-xs font-normal uppercase leading-[1.2] transition-all ${getStatusStyles()}`}>
+      {text}
     </div>
   );
 };

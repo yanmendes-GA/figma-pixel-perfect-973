@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
+import { Menu, Search, Bell, Settings } from 'lucide-react';
 
-export const Header: React.FC = () => {
+interface HeaderProps {
+  onMenuToggle: () => void;
+}
+
+export const Header: React.FC<HeaderProps> = ({ onMenuToggle }) => {
   const [searchQuery, setSearchQuery] = useState('');
 
   const handleSearchSubmit = (e: React.FormEvent) => {
@@ -14,55 +19,62 @@ export const Header: React.FC = () => {
 
   return (
     <header className="w-full py-5">
-      <div className="flex w-full items-center gap-[29px] flex-wrap">
-        <div className="items-center bg-[#232A32] self-stretch flex min-w-60 min-h-[51px] gap-10 flex-wrap flex-1 shrink basis-6 my-auto px-5 rounded-[43px]">
-          <nav className="self-stretch flex items-center text-[15px] whitespace-nowrap leading-[1.2] my-auto p-2.5" aria-label="Breadcrumb">
-            <div className="text-[#A0A3A6] font-normal self-stretch my-auto">
+      <div className="flex w-full items-center gap-4 lg:gap-[29px] flex-wrap">
+        <div className="items-center bg-card self-stretch flex min-w-60 min-h-[51px] gap-4 lg:gap-10 flex-wrap flex-1 shrink basis-6 my-auto px-5 rounded-[43px]">
+          {/* Mobile menu button */}
+          <button
+            onClick={onMenuToggle}
+            className="lg:hidden p-2 hover:bg-muted/50 rounded-lg transition-colors"
+            aria-label="Toggle menu"
+          >
+            <Menu className="w-5 h-5 text-muted-foreground" />
+          </button>
+
+          <nav className="hidden sm:flex items-center text-[15px] whitespace-nowrap leading-[1.2] my-auto p-2.5" aria-label="Breadcrumb">
+            <span className="text-muted-foreground font-normal">
               Início
-            </div>
-            <div className="self-stretch flex w-[19px] shrink-0 h-4 my-auto" />
-            <div className="text-[#D0D1D3] font-bold self-stretch my-auto">
+            </span>
+            <span className="mx-2 text-muted-foreground">/</span>
+            <span className="text-foreground font-bold">
               Mentorias
-            </div>
+            </span>
           </nav>
           
-          <form onSubmit={handleSearchSubmit} className="items-center bg-[#101820] self-stretch flex min-w-60 min-h-10 gap-2.5 italic text-xs text-[#6F7479] font-medium whitespace-nowrap leading-[1.2] flex-wrap flex-1 shrink basis-[0%] my-auto px-5 rounded-[43px]">
-            <div className="self-stretch flex w-6 shrink-0 h-[21px] my-auto" />
+          <form onSubmit={handleSearchSubmit} className="items-center bg-background self-stretch flex min-w-40 md:min-w-60 min-h-10 gap-2.5 italic text-xs font-medium whitespace-nowrap leading-[1.2] flex-wrap flex-1 shrink basis-[0%] my-auto px-5 rounded-[43px]">
+            <Search className="w-4 h-4 text-muted-foreground" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Pesquisar"
-              className="self-stretch my-auto bg-transparent border-none outline-none text-[#6F7479] placeholder-[#6F7479]"
+              className="flex-1 bg-transparent border-none outline-none text-foreground placeholder-muted-foreground"
             />
           </form>
           
-          <div className="self-stretch flex items-center gap-3.5 my-auto">
-            <img
-              src="https://api.builder.io/api/v1/image/assets/TEMP/0f52fa3f713bde09c483ff3883b40ffe6888a7f4?placeholderIfAbsent=true"
-              className="aspect-[1.14] object-contain w-6 self-stretch shrink-0 my-auto"
-              alt="Notification"
-            />
-            <div className="self-stretch flex w-[23px] shrink-0 h-[21px] my-auto" />
-            <img
-              src="https://api.builder.io/api/v1/image/assets/TEMP/b8622ad01573443d07363526c65e1271ab6ad901?placeholderIfAbsent=true"
-              className="aspect-[1.14] object-contain w-6 self-stretch shrink-0 my-auto"
-              alt="Settings"
-            />
+          <div className="hidden sm:flex items-center gap-3.5 my-auto">
+            <button className="p-2 hover:bg-muted/50 rounded-lg transition-colors" aria-label="Notifications">
+              <Bell className="w-5 h-5 text-muted-foreground hover:text-foreground transition-colors" />
+            </button>
+            <button className="p-2 hover:bg-muted/50 rounded-lg transition-colors" aria-label="Settings">
+              <Settings className="w-5 h-5 text-muted-foreground hover:text-foreground transition-colors" />
+            </button>
           </div>
         </div>
         
         <button
           onClick={handleNewMentorship}
-          className="self-stretch flex min-w-60 items-center gap-2.5 text-lg text-[#F6E5D2] font-bold tracking-[0.02px] leading-none justify-center my-auto px-8 py-4 rounded-lg hover:opacity-90 transition-opacity"
+          className="bg-primary text-primary-foreground flex items-center gap-2.5 text-base lg:text-lg font-bold tracking-[0.02px] leading-none justify-center px-6 lg:px-8 py-3 lg:py-4 rounded-lg hover:bg-primary/90 transition-all hover:shadow-lg hover:scale-105 whitespace-nowrap"
         >
           <img
             src="https://api.builder.io/api/v1/image/assets/TEMP/d06f8fe92bbf0bdfd4b14494e2b8ff770fd18569?placeholderIfAbsent=true"
-            className="aspect-[1.16] object-contain w-[29px] self-stretch shrink-0 my-auto"
+            className="w-6 lg:w-[29px]"
             alt="Add icon"
           />
-          <span className="self-stretch my-auto">
+          <span className="hidden sm:inline">
             Nova Mentoria
+          </span>
+          <span className="sm:hidden">
+            Nova
           </span>
         </button>
       </div>

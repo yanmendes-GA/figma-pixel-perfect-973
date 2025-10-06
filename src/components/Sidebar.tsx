@@ -1,6 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Menu, X } from 'lucide-react';
 
-export const Sidebar: React.FC = () => {
+interface SidebarProps {
+  isOpen: boolean;
+  onToggle: () => void;
+}
+
+export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
   const menuItems = [
     {
       icon: "https://api.builder.io/api/v1/image/assets/TEMP/16608b5283d1c28f06df6399933cd036703aba0a?placeholderIfAbsent=true",
@@ -30,73 +36,93 @@ export const Sidebar: React.FC = () => {
   ];
 
   return (
-    <nav className="relative min-w-60 w-[331px] pt-[22px] pb-[68px] px-[27px] border-r-[#3F464C] border-r border-solid">
-      <div className="z-0 w-full">
-        <div className="flex w-full flex-col items-center justify-center pt-5">
-          <div className="max-w-full w-[266px]">
-            <img
-              src="https://api.builder.io/api/v1/image/assets/TEMP/d5aa05831702c1b0f3b5cabf59b188b7b0987600?placeholderIfAbsent=true"
-              className="aspect-[5.13] object-contain w-full"
-              alt="Logo"
-            />
-          </div>
-        </div>
-        
-        <div className="w-full text-[15px] text-[#D0D1D3] font-semibold whitespace-nowrap leading-[1.2] mt-[60px]">
-          {menuItems.map((item, index) => (
-            <div
-              key={index}
-              className={`flex w-full items-center gap-4 px-5 py-2.5 rounded-xl ${
-                item.active 
-                  ? 'items-center border bg-[#232A32] text-[#D67C1C] border-solid border-[#D67C1C]' 
-                  : ''
-              } ${index > 0 ? 'mt-5' : ''}`}
-            >
-              <img
-                src={item.icon}
-                className="aspect-[1.13] object-contain w-[26px] self-stretch shrink-0 my-auto"
-                alt={item.label}
-              />
-              <div className="self-stretch my-auto">
-                {item.label}
+    <>
+      {/* Mobile overlay */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          onClick={onToggle}
+        />
+      )}
+
+      <nav
+        className={`fixed lg:relative inset-y-0 left-0 z-50 w-[331px] bg-background border-r border-border transition-transform duration-300 lg:translate-x-0 ${
+          isOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
+      >
+        <div className="relative h-full pt-[22px] pb-[68px] px-[27px] flex flex-col">
+          {/* Close button for mobile */}
+          <button
+            onClick={onToggle}
+            className="absolute top-4 right-4 lg:hidden p-2 hover:bg-muted/50 rounded-lg transition-colors"
+            aria-label="Close menu"
+          >
+            <X className="w-5 h-5 text-muted-foreground" />
+          </button>
+
+          <div className="flex-1 overflow-y-auto">
+            <div className="flex w-full flex-col items-center justify-center pt-5">
+              <div className="max-w-full w-[266px]">
+                <img
+                  src="https://api.builder.io/api/v1/image/assets/TEMP/d5aa05831702c1b0f3b5cabf59b188b7b0987600?placeholderIfAbsent=true"
+                  className="aspect-[5.13] object-contain w-full"
+                  alt="Logo"
+                />
               </div>
             </div>
-          ))}
-        </div>
-      </div>
-      
-      <div className="justify-between items-center bg-[#232A32] z-0 flex min-h-[66px] w-full gap-[40px_77px] p-2.5 rounded-[10px]">
-        <div className="self-stretch flex items-center gap-2.5 my-auto">
-          <div className="justify-center items-center bg-[#101820] self-stretch flex min-h-[46px] flex-col w-[46px] h-[46px] my-auto px-2.5 rounded-[23px] border-[0.422px] border-solid border-[#3F464C]">
-            <img
-              src="https://api.builder.io/api/v1/image/assets/TEMP/52ea50c2b8c816d4e9bfcc66f52b5bb806eaaaf9?placeholderIfAbsent=true"
-              className="aspect-[2] object-contain w-[21px]"
-              alt="User avatar"
-            />
-          </div>
-          <div className="self-stretch leading-[1.2] w-[104px] my-auto">
-            <div className="text-white text-[15px] font-normal">
-              Yan Ricardo
+            
+            <div className="w-full text-[15px] font-semibold whitespace-nowrap leading-[1.2] mt-[60px]">
+              {menuItems.map((item, index) => (
+                <button
+                  key={index}
+                  className={`flex w-full items-center gap-4 px-5 py-2.5 rounded-xl transition-all duration-200 ${
+                    item.active
+                      ? 'bg-card text-primary border border-primary shadow-sm'
+                      : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
+                  } ${index > 0 ? 'mt-5' : ''}`}
+                >
+                  <img
+                    src={item.icon}
+                    className="aspect-[1.13] object-contain w-[26px] shrink-0 transition-transform duration-200 hover:scale-110"
+                    alt={item.label}
+                  />
+                  <span className="flex-1 text-left">
+                    {item.label}
+                  </span>
+                </button>
+              ))}
             </div>
-            <div className="text-[#D0D1D3] text-xs italic font-medium mt-1">
-              Mentor
+          </div>
+          
+          {/* User profile at bottom */}
+          <div className="mt-auto pt-4">
+            <div className="bg-card flex items-center justify-between w-full gap-2 p-2.5 rounded-lg hover:bg-muted/50 transition-colors cursor-pointer group">
+              <div className="flex items-center gap-2.5">
+                <div className="flex items-center justify-center bg-background w-[46px] h-[46px] rounded-full border border-border">
+                  <img
+                    src="https://api.builder.io/api/v1/image/assets/TEMP/52ea50c2b8c816d4e9bfcc66f52b5bb806eaaaf9?placeholderIfAbsent=true"
+                    className="aspect-[2] object-contain w-[21px]"
+                    alt="User avatar"
+                  />
+                </div>
+                <div className="leading-tight">
+                  <div className="text-foreground text-[15px] font-normal">
+                    Yan Ricardo
+                  </div>
+                  <div className="text-muted-foreground text-xs italic font-medium">
+                    Mentor
+                  </div>
+                </div>
+              </div>
+              <img
+                src="https://api.builder.io/api/v1/image/assets/TEMP/45831fc560f2816a64217faf0799c13b29664f78?placeholderIfAbsent=true"
+                className="w-[18px] transition-transform duration-200 group-hover:rotate-180"
+                alt="Dropdown arrow"
+              />
             </div>
           </div>
         </div>
-        <img
-          src="https://api.builder.io/api/v1/image/assets/TEMP/45831fc560f2816a64217faf0799c13b29664f78?placeholderIfAbsent=true"
-          className="aspect-[1.12] object-contain w-[18px] self-stretch shrink-0 my-auto"
-          alt="Dropdown arrow"
-        />
-      </div>
-      
-      <div className="justify-center items-center bg-[#3F464C] absolute z-0 flex min-h-[26px] w-[26px] flex-col h-[26px] right-[-13px] rounded-[13px] top-[83px]">
-        <img
-          src="https://api.builder.io/api/v1/image/assets/TEMP/db84d331501902a57cd5f9ceba5643a2d0e458b5?placeholderIfAbsent=true"
-          className="aspect-[1.1] object-contain w-full"
-          alt="Collapse sidebar"
-        />
-      </div>
-    </nav>
+      </nav>
+    </>
   );
 };
